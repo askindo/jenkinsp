@@ -14,7 +14,8 @@ pipeline {
         stage("Packaging stage") {
             steps{
                 echo "Packaging Application into Dockerfile..."
-                sh "docker build -t java-simple-java/project:0.1"
+                sh "docker build -t java-simple-java/project:0.1 ."
+                
             }
         
         }
