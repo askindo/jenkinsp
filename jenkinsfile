@@ -14,11 +14,11 @@ pipeline {
         stage("Packaging stage") {
             steps{
                 echo "Packaging Application into DockerImage..."
-                withCredentials (usernamePassword(credentailsid:'DockerHub-secret', passwordVariable:'PASS', usernameVariable: 'USER'))
-                sh "docker buil -t sunkafob360/simple-java-app:1.0 ."
+                withCredentials([usernamePassword{(credentailsid:'DockerHub-secret', passwordVariable:'PASS', usernameVariable: 'USER')]{
+                sh "docker build -t sunkafob360/simple-java-app:1.0 ."
                 sh "echo $PASS | docker login -u $USER --password-stdin "
                 sh "docker push sunkafob360/simple-java-app:1.0"           
-            
+                }
                 
             }
         
