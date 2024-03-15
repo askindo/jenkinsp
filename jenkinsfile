@@ -6,27 +6,32 @@ pipeline {
     stages{
         stage("Building stage") {
             steps{
-                echo "Building Application into .jar..."
+                echo "Building Application..."
                 sh "mvn clean package"
             }
         }
 
-        stage("Packaging stage") {
+        stage("Testing stage") {
             steps{
                 echo "Packaging Application into DockerImage..."
-                withCredentials([usernamePassword{(credentailsid:'DockerHub-secret', passwordVariable:'PASS', usernameVariable: 'USER')]{
-                sh "docker build -t sunkafob360/simple-java-app:1.0 ."
+                withCredentials (usernamePassword(credentailsid:'DockerHub-secret', passwordVariable:'PASS', usernameVariable: 'USER'))
+                sh "docker buil -t sunkafob360/simple-java-app:1.0 ."
                 sh "echo $PASS | docker login -u $USER --password-stdin "
                 sh "docker push sunkafob360/simple-java-app:1.0"           
-                }
-                
+            
             }
+            
         
         }
 
-        stage("Deploy stage") {
+        stage("Deploy stage"){ 
+            environment{
+                AWS_ACCESS_ID = credentials("AWS-Access-Key-ID")
+                AWS_SECRET_ACCESS_KEY = credentials("AWS-SECRET-ACCESS-KEY-ID")
+            }
             steps{
-                echo "Deploy Application..."
+                echo "Deploy Application"
+                sh "kubectl create deployment nginx --image=nginx"
             }
         
         }
