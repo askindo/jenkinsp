@@ -9,7 +9,15 @@ pipeline {
                 echo "Building Application..."
                 sh "mvn clean package"
             }
-        } 
+        }
+
+        stage("Testing stage") {
+            steps{
+                echo "Packaging Application into DockerImage..."
+            
+            }
+            
+        
         }
 
         stage("Deploy stage"){ 
